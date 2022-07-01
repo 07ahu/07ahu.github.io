@@ -1,0 +1,242 @@
+/* STYLE SECTIONING TAGS */
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Chivo&family=Crimson+Text:wght@600&family=Fjalla+One&family=Josefin+Sans:wght@700&family=Judson&family=Montserrat:wght@800&family=Mulish:wght@800&family=Poppins:wght@600&family=Raleway:wght@900&family=Rubik:wght@900&family=Work+Sans&display=swap');
+
+
+* { /* Reset the space of the webpage */
+   margin: 0px;
+   padding: 0px;
+}
+
+
+/* STYLE TEXT */
+.centered {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-shadow: 3px 3px #2f2fa2;
+}
+.centered2{
+  position: absolute;
+  top: 63%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Chivo', sans-serif;
+  color:#f64c72;
+  text-shadow: 1.5px 1.5px #2f2fa2;
+}
+.centered3{
+  position: absolute;
+  top: 76%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color:#f64c72;
+  text-shadow: 1px 1px #2f2fa2;
+  background-color: Transparent;
+  border:none;
+  cursor:pointer;
+}
+.centered3:hover{
+  color:#fff9e7;
+  text-shadow: 1px 1px #f64c72;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.container {
+  position: relative;
+  text-align: center;
+  color:#f64c72;
+  font-size:20vh;
+  font-family: 'Montserrat', sans-serif;
+
+}
+
+.title{
+  text-shadow: 3px 3px #99738e;
+  font-family: 'Montserrat', sans-serif;
+  font-size:13vh;
+  color:#f64c72;
+  margin:5vh;
+}
+
+.donate{
+  font-family: 'Fjalla One', sans-serif;
+  color:#fff9e7;
+  margin:5vw;
+  font-size:4vw;
+  text-align:left
+}
+.helptext{
+  font-family: 'Chivo', sans-serif;
+  color:#fff9e7;
+  margin:5vw;
+  font-size:2vw;
+  text-align:left;
+}
+
+/* headers */
+.sth1{
+  text-shadow: 3px 3px #99738e;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10vh;
+  color:#f64c72;
+  margin:5vh;
+  text-align: right;
+}
+
+h2{
+  font-family: 'Chivo', sans-serif;
+  color:#fff9e7;
+  margin-left:5vw;
+  margin-right:5vw;
+  margin-bottom:5vw;
+  font-size:2vw;
+  text-align: left;
+}
+
+.learnMoreText{
+  font-family: 'Chivo', sans-serif;
+  color:#fff9e7;
+  margin-left:5vw;
+  margin-right:5vw;
+  margin-bottom:1vw;
+  font-size:2vw;
+  text-align: left;
+}
+
+a{
+  font-family: 'Chivo', sans-serif;
+  color:#fff9e7;
+  font-size:1.75vw;
+  text-align: center;
+}
+
+
+
+footer{
+  font-family: 'Chivo', sans-serif;
+  color:#fff9e7;
+  text-align: center;
+  margin:5vh;
+}
+/* STYLE IMAGES */
+.backgroundimg{
+  width:100%;
+  object-fit:cover;
+  height:120vh;
+  opacity:0.5;
+}
+
+/* STYLE NAV BAR */
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #2f2fa2;
+}
+
+li {
+  float: right;
+}
+
+li a {
+  display: block;
+  color: #fff9e7;
+  text-align: center;
+  padding: 22px 24px;
+  text-decoration: none;
+  font-family: 'Chivo', sans-serif;
+}
+
+li a:hover {
+  background-color:#f64c72;
+  color:#2f2fa2;
+}
+
+dl dt a{
+  color:#f64c72;
+  font-family: "Mulish", sans-serif;
+}
+dt{
+  margin:3vh;
+}
+/* STYLE BUTTONS */
+#titleText{
+  font-family: 'Chivo', sans-serif;
+  font-size: 6em;
+  color:#2f2fa2; 
+  text-align: center; 
+  text-shadow: 2px 2px #f64c72;
+  padding: 50px;
+}
+
+.buttonBackground{
+  background-color: #242582;
+}
+
+#myBtn{
+  display: block;
+  margin: 0 auto;
+  padding: 20px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  background-color: #f64c72;
+  font-size: 25px;
+  border-radius: 4px;
+  color: #fff9e7;
+}
+
+#quote{
+  text-align: center;
+  font-family: 'Chivo', sans-serif;
+  font-size: 5vw;
+  color: #2f2fa2;
+  text-shadow: 2px 2px #f64c72;
+  margin-top: 70px;
+  margin-left: 400px;
+  margin-right: 400px;
+  padding: 30px;
+  background-color: #fff9e7;
+  font-weight: bold;
+  border: 10px solid #f64c72;
+}
+
+/* ADD MORE! */
+.learnBody{
+  background-color: #242582;
+}
+
+.first{
+  font-family: 'Montserrat', sans-serif;
+  color:#f64c72;
+  text-align:center;
+  font-size: 13vh;
+  margin:4vh;
+}
+
+.homeText{
+  text-align:center;font-family:'Chivo', sans-serif;color:#fff9e7;margin-right:15vw;margin-left:15vw;margin-bottom:7vh;
+}
+
+.homeLink{
+  font-family:'Mulish', sans-serif;color:#f64c72;font-size:5vh;
+}
+
+#buttonText{
+  font-family:Chivo, sans-serif;
+  color:#fff9e7;
+  text-align:center;
+  margin-bottom:5vh;
+  margin-top:10vh;
+  font-size:1.75vw;
+  margin-left:15vw;
+  margin-right:15vw;
+}
+
+#buttonText2{
+  font-family:Chivo, sans-serif;color:#fff9e7;text-align:center;margin-bottom:5vh;
+}

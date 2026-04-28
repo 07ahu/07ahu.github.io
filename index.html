@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>p5.js Block Print Tool</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.js"></script>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* ===== BACKGROUND ===== */
+body {
+    background: white;
+    font-family: sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 80px;
+    gap: 15px;
+
+    background-image: url("bg.jpg");
+    background-size: 95%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* ===== TOP AREA ===== */
+#topbar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+/* ===== RESET BUTTONS (ROW 1) ===== */
+#controls {
+    display: flex;
+    flex-direction: row;  /* <-- key fix */
+    gap: 10px;
+    align-items: center;
+
+}
+
+#controls img {
+    width: 10vw;
+    height: auto;
+    cursor: pointer;
+}
+
+/* ===== SECOND ROW (colors + brushes) ===== */
+#tool-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+}
+
+/* ===== COLORS ===== */
+#color-select {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+#color-select img {
+    width: 60px;
+    cursor: pointer;
+    transition: transform 0.15s ease;
+}
+
+#color-select img:hover {
+    transform: scale(1.1);
+}
+
+#color-select img.selected {
+    outline: 4px solid #F4218F !important;
+    outline-offset: 4px !important;
+    box-shadow: 0 0 0 6px #F4218F;
+    transform: scale(1.1) !important;
+}
+
+/* ===== BRUSHES ===== */
+#brush-select {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+#brush-select img {
+    width: 18px;
+    height: auto;
+    cursor: pointer;
+
+    transform: rotate(var(--rot, 0deg));
+    transition: transform 0.15s ease;
+}
+
+/* tilt */
+#brush1 { --rot: -6deg; }
+#brush2 { --rot: -2deg; }
+#brush3 { --rot: 3deg; }
+#brush5 { --rot: -5deg; }
+
+/* hover */
+#brush-select img:hover {
+    transform: rotate(var(--rot, 0deg)) scale(1.1);
+}
+
+/* selected (pink pixel glow preserved) */
+#brush-select img.selected {
+    transform: rotate(var(--rot, 0deg)) scale(1.15) !important;
+
+    outline: 4px solid #F4218F !important;
+    outline-offset: 4px !important;
+
+    box-shadow:
+        0 0 0 6px #F4218F,
+        4px 4px 0 6px #ffb6da,
+        -4px -4px 0 6px #ff69b4 !important;
+    
+    image-rendering: pixelated;
+}
+
+/* ===== CANVAS ===== */
+#canvas-container {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* ===== BOTTOM ===== */
+#bottom-controls {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+#bottom-controls img {
+    width: 10vw;
+    height: 10vh;
+    cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<!-- TOP BAR -->
+<div id="topbar">
+
+    <!-- ROW 1: RESET BUTTONS -->
+    <div id="controls">
+        <img src="stamp.png" id="stampBtn">
+        <img src="upload.png" id="uploadBtn" style="margin-top:2.5vw;">
+        <input type="file" id="fileInput" accept="image/*" style="display:none;">
+        
+    </div>
+
+    <!-- ROW 2: COLORS + BRUSHES -->
+    <div id="tool-row">
+
+        <div id="color-select">
+            <img src="red.png" id="colorRed" style = 'margin:0.5vw;'>
+            <img src="blue.png" id="colorBlue" style = 'margin:0.5vw;'>
+            <img src="yellow.png" id="colorYellow" style = 'margin:0.5vw;'>
+            <img src="black.png" id="colorBlack" style = 'margin:0.5vw;'>
+        </div>
+
+        <div id="brush-select">
+            <img src="1.png" id="brush1" style = 'margin:0.5vw;'>
+            <img src="2.png" id="brush2" style = 'margin:0.5vw;'>
+            <img src="3.png" id="brush3" style = 'margin:0.5vw;'>
+            <img src="5.png" id="brush5" style = 'margin:0.5vw;'>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- CANVAS -->
+<div id="canvas-container"></div>
+
+<!-- BOTTOM -->
+<div id="bottom-controls">
+    <img src="resetBlock.png" id="clearBtn">
+    <img src="resetStamp.png" id="clearDrawBtn">
+</div>
+
+<script src="sketch.js"></script>
+</body>
+</html>

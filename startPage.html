@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Page</title>
+  <style>
+    #playBtn {
+    width: 200px;
+    cursor: pointer;
+    transition: transform 0.1s, opacity 0.1s;
+    }
+
+    #playBtn:hover {
+        transform: scale(1.05);
+        opacity: 0.85;
+    }
+
+    #playBtn:active {
+        transform: scale(0.97);
+    }
+    #circle {
+        position: fixed;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #F4218F;
+        transform: scale(0);
+        transition: transform 0.6s ease-in-out;
+        /* position it behind the button */
+        top: 50%;
+        left: 50%;
+        translate: -50% -50%;
+        z-index: 99;
+    }
+
+    #circle.grow {
+        transform: scale(300);
+    }
+  </style>
+</head>
+<body>
+  <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh;">
+        <img src="home.png" style="width: 40%;" />
+        <a href="index.html">
+            <img src="nextButton.png" id="playBtn" />
+        </a>
+    </div>
+    <div id="circle"></div>
+
+    <script>
+        document.getElementById('playBtn').addEventListener('click', function(e) {
+        e.preventDefault(); // stop link briefly
+        document.getElementById('circle').classList.add('grow');
+        setTimeout(() => {
+            window.location.href = 'index.html'; // navigate after animation
+        }, 600); // match transition duration
+    });
+    </script>
+</body>
+</html>

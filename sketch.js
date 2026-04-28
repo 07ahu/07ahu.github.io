@@ -459,7 +459,7 @@ function setupBrushButtons() {
     brush1: 1,
     brush2: 2,
     brush3: 6,
-    brush5: 18
+    brush5: 25
   };
 
   Object.entries(sizes).forEach(([id, size]) => {

@@ -458,8 +458,8 @@ function setupBrushButtons() {
   const sizes = {
     brush1: 1,
     brush2: 2,
-    brush3: 4,
-    brush5: 9
+    brush3: 6,
+    brush5: 18
   };
 
   Object.entries(sizes).forEach(([id, size]) => {

@@ -3,55 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-
-  <!--
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&display=swap" rel="stylesheet">
--->
   <title>Matter.js Stable Image Balls</title>
-
   <style>
     body {
       margin: 0;
-      overflow-x: hidden;
+      overflow: hidden;
       background: #CC5500;
-
-      /* allows scrolling */
-      height: 300vh;
     }
 
     canvas {
       display: block;
-
-      /* keeps scene fixed while scrolling */
       position: fixed;
       top: 0;
       left: 0;
     }
-
-    /*
-        .bottom-text {
-      position: fixed;
-      bottom: 60px;
-      width: 100%;
-
-      text-align: center;
-
-      color: #FFF;
-      font-family: "Kosugi Maru";
-      font-size: 53.063px;
-      font-style: normal;
-      font-weight: 400;
-      line-height: normal;
-      letter-spacing: 4px;
-
-
-      z-index: 1000;
-
-      pointer-events: none;
-    }
-    */
   </style>
 </head>
 <body>
@@ -60,19 +25,16 @@
 
 <script>
   const {
-    Engine,
-    Render,
-    Runner,
-    World,
-    Bodies,
-    Mouse,
-    MouseConstraint,
-    Constraint,
-    Events,
-    Body
+    Engine, Render, Runner, World,
+    Bodies, Mouse, MouseConstraint,
+    Constraint, Events, Body
   } = Matter;
 
-  // ENGINE
+  // ── DIMENSIONS ──────────────────────────────────────
+  const W = window.innerWidth;
+  const H = window.innerHeight;
+  // ────────────────────────────────────────────────────
+
   const engine = Engine.create({
     positionIterations: 12,
     velocityIterations: 10,
@@ -80,99 +42,48 @@
   });
 
   const world = engine.world;
-
   engine.gravity.y = 0.9;
 
-  // RENDERER
   const render = Render.create({
     element: document.body,
     engine: engine,
-
     options: {
-      width: window.innerWidth,
-      height: window.innerHeight,
+      width: W,
+      height: H,
       wireframes: false,
       background: "#CC5500"
     }
   });
 
   Render.run(render);
-
-  // RUNNER
-  const runner = Runner.create();
-  Runner.run(runner, engine);
+  Runner.run(Runner.create(), engine);
 
   // WALLS
-  const ground = Bodies.rectangle(
-    window.innerWidth / 2,
-    window.innerHeight + 30,
-    window.innerWidth,
-    60,
-    {
-      isStatic: true,
-      friction: 1
-    }
-  );
+  World.add(world, [
+    Bodies.rectangle(W / 2, H + 30, W, 60, { isStatic: true, friction: 1 }),
+    Bodies.rectangle(-30,   H / 2,  60, H, { isStatic: true }),
+    Bodies.rectangle(W + 30, H / 2, 60, H, { isStatic: true })
+  ]);
 
-  const leftWall = Bodies.rectangle(
-    -30,
-    window.innerHeight / 2,
-    60,
-    window.innerHeight,
-    {
-      isStatic: true
-    }
-  );
-
-  const rightWall = Bodies.rectangle(
-    window.innerWidth + 30,
-    window.innerHeight / 2,
-    60,
-    window.innerHeight,
-    {
-      isStatic: true
-    }
-  );
-
-  World.add(world, [ground, leftWall, rightWall]);
-
-  // SMALL IMAGE BALLS
+  // SMALL BALLS
   const images = [
-    "3.png",
-    "4.png",
-    "5.png",
-    "6.png",
-    "8.png",
-    "9.png",
-    "10.png",
-    "11.png",
-    "12.png",
-    "13.png",
-    "14.png",
-    "15.png",
-    "16.png",
-    "17.png",
-    "mail.png",
-    "linkedIn.png",
+    "3.png", "4.png", "5.png", "6.png",
+    "8.png", "9.png", "10.png", "11.png",
+    "12.png", "13.png", "14.png", "15.png",
+    "16.png", "17.png", "mail.png", "linkedIn.png"
   ];
 
-  // CREATE SMALL BALLS
   function createBall(x, y) {
+    const radius = 42;                          // was 70
+    const image  = images[Math.floor(Math.random() * images.length)];
 
-    const radius = 70;
-
-    const image = images[Math.floor(Math.random() * images.length)];
-
-    const ball = Bodies.circle(x, y, radius, {
-
+    World.add(world, Bodies.circle(x, y, radius, {
       restitution: 0.05,
       friction: 0.9,
       frictionStatic: 1,
       frictionAir: 0.02,
-
       density: 0.002,
       slop: 0.01,
-
       render: {
         sprite: {
           texture: image,
@@ -180,73 +91,47 @@
           yScale: (radius * 2) / 200
         }
       }
-    });
-
-    World.add(world, ball);
+    }));
   }
 
-  // CREATE BALLS
   for (let i = 0; i < 15; i++) {
-
-    createBall(
-      Math.random() * window.innerWidth,
-      Math.random() * -800
-    );
+    createBall(Math.random() * W, Math.random() * -500);
   }
 
-  // =========================
-  // BIG CENTER IMAGE
-  // =========================
+  // CENTER BALL (name.png)
+  const centerRadius = 85;                      // was 140
 
-  const centerRadius = 140;
-
-  const centerBall = Bodies.circle(
-    window.innerWidth / 2,
-    window.innerHeight / 2,
-    centerRadius,
-    {
-
-      density: 0.006,
-
-      restitution: 0.02,
-
-      friction: 0.8,
-      frictionStatic: 0.8,
-      frictionAir: 0.025,
-
-      slop: 0.01,
-
-      render: {
-        sprite: {
-          texture: "name.png",
-          xScale: (centerRadius * 2) / 300,
-          yScale: (centerRadius * 2) / 300
-        }
+  const centerBall = Bodies.circle(W / 2, H / 2, centerRadius, {
+    density: 0.006,
+    restitution: 0.02,
+    friction: 0.8,
+    frictionStatic: 0.8,
+    frictionAir: 0.025,
+    slop: 0.01,
+    render: {
+      sprite: {
+        texture: "name.png",
+        xScale: (centerRadius * 2) / 300,
+        yScale: (centerRadius * 2) / 300
       }
     }
-  );
+  });
 
   World.add(world, centerBall);
 
-  // =========================
-  // CHARACTER IMAGE
-  // =========================
-
+  // CHARACTER
   const character = Bodies.rectangle(
-    window.innerWidth / 2 + 480,
-    window.innerHeight / 2 - 20,
-    120,
-    120,
+    W / 2 + 280,                               // was +480
+    H / 2 - 10,
+    72, 72,                                    // was 120x120
     {
       isStatic: true,
-
       angle: -0.15,
-
       render: {
         sprite: {
           texture: "character.png",
-          xScale: 0.6,
-          yScale: 0.6
+          xScale: 0.36,                        // was 0.6
+          yScale: 0.36
         }
       }
     }
@@ -254,23 +139,17 @@
 
   World.add(world, character);
 
-  // =========================
-  // AIRPLANE IMAGE
-  // =========================
-
+  // AIRPLANE
   const airplane = Bodies.rectangle(
-    -300, // starts offscreen left
-    180,
-    300,
-    150,
+    -180, 110,                                 // was -300, 180
+    180, 90,                                   // was 300x150
     {
       isStatic: true,
-
       render: {
         sprite: {
           texture: "airplane.png",
-          xScale: 0.7,
-          yScale: 0.7
+          xScale: 0.42,                        // was 0.7
+          yScale: 0.42
         }
       }
     }
@@ -278,95 +157,39 @@
 
   World.add(world, airplane);
 
-  // =========================
-  // SCROLL ANIMATION
-  // =========================
-
+  // SCROLL — airplane flies across
   window.addEventListener("scroll", () => {
-
-    const scrollY = window.scrollY;
-
-    // airplane movement
-    const airplaneX = -300 + scrollY * 1.5;
-
     Body.setPosition(airplane, {
-      x: airplaneX,
-      y: 180
+      x: -180 + window.scrollY * 1.5,
+      y: 110
     });
   });
 
-  // =========================
   // CENTER CONSTRAINT
-  // =========================
-
-  const centerConstraint = Constraint.create({
-
-    pointA: {
-      x: window.innerWidth / 2,
-      y: window.innerHeight / 2
-    },
-
+  World.add(world, Constraint.create({
+    pointA: { x: W / 2, y: H / 2 },
     bodyB: centerBall,
-
     stiffness: 0.0015,
     damping: 0.15,
+    render: { visible: false }
+  }));
 
-    render: {
-      visible: false
-    }
-  });
-
-  World.add(world, centerConstraint);
-
-  // KEEP CENTER IMAGE CENTERED
+  // GENTLE CENTERING FORCE
   Events.on(engine, "beforeUpdate", () => {
-
-    const targetX = window.innerWidth / 2;
-    const targetY = window.innerHeight / 2;
-
-    const forceX = (targetX - centerBall.position.x) * 0.00003;
-    const forceY = (targetY - centerBall.position.y) * 0.00003;
-
     Body.applyForce(centerBall, centerBall.position, {
-      x: forceX,
-      y: forceY
+      x: (W / 2 - centerBall.position.x) * 0.00003,
+      y: (H / 2 - centerBall.position.y) * 0.00003
     });
   });
 
-  // MOUSE INTERACTION
+  // MOUSE
   const mouse = Mouse.create(render.canvas);
-
-  const mouseConstraint = MouseConstraint.create(engine, {
-
+  World.add(world, MouseConstraint.create(engine, {
     mouse: mouse,
-
-    constraint: {
-      stiffness: 0.2,
-
-      render: {
-        visible: false
-      }
-    }
-  });
-
-  World.add(world, mouseConstraint);
-
+    constraint: { stiffness: 0.2, render: { visible: false } }
+  }));
   render.mouse = mouse;
 
-  // RESIZE
-  window.addEventListener("resize", () => {
-    location.reload();
-  });
-
 </script>
-<!--
-<div class="bottom-text">
-  student @ duke university, creative, product designer
-</div>
- Figma capture script: leaves a toolbar and allows copying the page to the clipboard for pasting into Figma.
-     To use: serve this folder on a local HTTP server, open the page with the hash "#figmacapture&figmadelay=1000",
-     wait for the success toast, then paste into a Figma file (Cmd/Ctrl+V). Keep this script unless you want it removed.
-<script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
--->
 </body>
 </html>

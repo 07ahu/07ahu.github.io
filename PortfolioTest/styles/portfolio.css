@@ -1,0 +1,41 @@
+:root{
+  --orange: #CC5500;
+  --light-blue: #c9e6ee;
+  --yellow: #ffd84d;
+}
+
+*{box-sizing:border-box}
+body{margin:0;font-family: 'Kosugi Maru', system-ui, sans-serif;background:var(--orange);color:#fff}
+
+.hero{position:relative;min-height:60vh;padding:60px 20px 120px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.hero-inner{text-align:center}
+.hero-logo{max-width:720px;width:80%;height:auto;display:block;margin:0 auto}
+.hero-sub{color:#fff;margin-top:24px;letter-spacing:2px}
+.hero-character{position:absolute;right:6%;bottom:12%;width:160px;transform:rotate(-8deg)}
+.hero-airplane{position:absolute;left:-200px;top:120px;width:340px}
+
+.projects{background:var(--light-blue);color:#222;padding:56px 20px}
+.projects-inner{max-width:1100px;margin:0 auto;display:flex;gap:32px;align-items:center}
+.projects-left{flex:1}
+.section-label{color:#c85b3a;margin:0 0 12px 0;font-weight:700}
+.project-title{color:var(--yellow);font-size:64px;line-height:0.95;margin:0 0 20px}
+.project-desc{color:#fff;opacity:0.95;max-width:380px}
+
+.projects-right{flex:1;display:flex;flex-direction:column;align-items:center}
+.laptop-art{background:rgba(255,255,255,0.2);padding:16px;border-radius:12px}
+.laptop-art img{max-width:420px;width:100%;height:auto;display:block}
+.view-project{display:inline-block;margin-top:20px;padding:12px 22px;background:#cc6b00;color:#fff;text-decoration:none;border-radius:6px;font-weight:700}
+
+.block-section{background:var(--orange);padding:80px 20px}
+.block-inner{max-width:1100px;margin:0 auto;text-align:center}
+.block-title{color:var(--yellow);font-size:72px;margin:0 0 24px}
+.block-art img{max-width:560px;width:100%;height:auto}
+
+.page-footer{text-align:center;padding:28px;color:rgba(255,255,255,0.9);background:transparent}
+
+@media (max-width:900px){
+  .projects-inner{flex-direction:column}
+  .project-title{font-size:44px}
+  .hero-character{display:none}
+  .hero-airplane{display:none}
+}

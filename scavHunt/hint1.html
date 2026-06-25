@@ -67,7 +67,7 @@
     z-index:1;
     max-width:980px;
     margin:0 auto;
-    padding:clamp(28px,5vw,56px) clamp(24px,6vw,70px) clamp(110px,16vw,150px);
+    padding:clamp(28px,5vw,56px) clamp(24px,6vw,70px) clamp(40px,6vw,60px);
   }
 
   h1{
@@ -193,54 +193,31 @@
     transform:scale(1) rotate(-8deg);
   }
 
-  /* waves */
-  .waves{
-    position:fixed;
-    left:0;
-    bottom:0;
-    width:100%;
-    height:clamp(70px,12vw,140px);
-    z-index:2;
-    display:block;
-    transition:opacity 0.6s ease, transform 0.6s ease;
-  }
-  .waves.hide{
-    opacity:0;
-    transform:translateY(100%);
-    pointer-events:none;
-  }
-
   /* next-clue button */
   .next-btn{
-    display:inline-flex;
-    align-items:center;
-    gap:0.5em;
+    display:inline-block;
     margin-top:clamp(24px,4vw,34px);
-    padding:0.65em 1.4em;
-    font-family:'Pirata One', serif;
-    font-size:clamp(17px,2vw,21px);
-    color:var(--gold-light);
-    background:linear-gradient(160deg, var(--ink-soft), var(--ink) 70%);
-    border:2px solid var(--gold);
-    border-radius:10px;
+    padding:0.55em 1.3em;
+    font-family:'IM Fell English', serif;
+    font-size:clamp(16px,1.9vw,19px);
+    color:var(--ink);
+    background:var(--gold-light);
+    border:1px solid var(--ink);
+    border-radius:6px;
     text-decoration:none;
     cursor:pointer;
-    box-shadow:0 3px 0 rgba(0,0,0,0.25), 0 6px 14px rgba(0,0,0,0.25);
     opacity:0;
-    transform:scale(0.7) translateY(10px);
+    transform:translateY(8px);
     pointer-events:none;
-    transition:opacity 0.4s ease, transform 0.45s cubic-bezier(.34,1.56,.64,1), background 0.25s ease;
+    transition:opacity 0.35s ease, transform 0.35s ease, background 0.2s ease;
   }
   .next-btn.show{
     opacity:1;
-    transform:scale(1) translateY(0);
+    transform:translateY(0);
     pointer-events:auto;
   }
   .next-btn:hover{
-    background:linear-gradient(160deg, var(--ink), #3e1c0d 70%);
-  }
-  .next-btn:active{
-    transform:scale(0.97) translateY(1px);
+    background:var(--gold);
   }
 
   @media (max-width:600px){
@@ -287,18 +264,6 @@
   <circle cx="50" cy="50" r="46" fill="none" stroke="#000" stroke-width="0.5" opacity="0.2"/>
 </svg>
 
-<svg class="waves" viewBox="0 0 1200 160" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="waveGrad" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#5b9bd5"/>
-      <stop offset="35%" stop-color="#1f5a9c"/>
-      <stop offset="100%" stop-color="#102a4f"/>
-    </linearGradient>
-  </defs>
-  <path d="M0,60 Q50,10 100,55 T200,55 T300,60 T400,50 T500,58 T600,52 T700,60 T800,50 T900,58 T1000,52 T1100,60 T1200,50 L1200,160 L0,160 Z" fill="url(#waveGrad)"/>
-  <path d="M0,60 Q50,10 100,55 T200,55 T300,60 T400,50 T500,58 T600,52 T700,60 T800,50 T900,58 T1000,52 T1100,60 T1200,50"
-        fill="none" stroke="#a9d2f0" stroke-width="3" opacity="0.6"/>
-</svg>
 
 <script>
 (function(){
@@ -306,7 +271,6 @@
   var feedback = document.getElementById('feedback');
   var seal = document.getElementById('waxSeal');
   var nextBtn = document.getElementById('nextBtn');
-  var waves = document.querySelector('.waves');
   var solved = false;
 
   var correctLines = [
@@ -335,7 +299,6 @@
       feedback.textContent = correctLines[Math.floor(Math.random()*correctLines.length)];
       feedback.className = 'feedback show is-correct';
       seal.classList.add('show');
-      waves.classList.add('hide');
       setTimeout(function(){
         nextBtn.classList.add('show');
       }, 350);

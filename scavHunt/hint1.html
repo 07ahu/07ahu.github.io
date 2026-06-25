@@ -202,6 +202,45 @@
     height:clamp(70px,12vw,140px);
     z-index:2;
     display:block;
+    transition:opacity 0.6s ease, transform 0.6s ease;
+  }
+  .waves.hide{
+    opacity:0;
+    transform:translateY(100%);
+    pointer-events:none;
+  }
+
+  /* next-clue button */
+  .next-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:0.5em;
+    margin-top:clamp(24px,4vw,34px);
+    padding:0.65em 1.4em;
+    font-family:'Pirata One', serif;
+    font-size:clamp(17px,2vw,21px);
+    color:var(--gold-light);
+    background:linear-gradient(160deg, var(--ink-soft), var(--ink) 70%);
+    border:2px solid var(--gold);
+    border-radius:10px;
+    text-decoration:none;
+    cursor:pointer;
+    box-shadow:0 3px 0 rgba(0,0,0,0.25), 0 6px 14px rgba(0,0,0,0.25);
+    opacity:0;
+    transform:scale(0.7) translateY(10px);
+    pointer-events:none;
+    transition:opacity 0.4s ease, transform 0.45s cubic-bezier(.34,1.56,.64,1), background 0.25s ease;
+  }
+  .next-btn.show{
+    opacity:1;
+    transform:scale(1) translateY(0);
+    pointer-events:auto;
+  }
+  .next-btn:hover{
+    background:linear-gradient(160deg, var(--ink), #3e1c0d 70%);
+  }
+  .next-btn:active{
+    transform:scale(0.97) translateY(1px);
   }
 
   @media (max-width:600px){
@@ -236,6 +275,8 @@
   </ul>
 
   <div class="feedback" id="feedback"></div>
+
+  <a href="clue2.html" class="next-btn" id="nextBtn">Onward to the Next Clue ⚓</a>
 </div>
 
 <svg class="wax-seal" id="waxSeal" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
@@ -264,6 +305,8 @@
   var list = document.getElementById('options');
   var feedback = document.getElementById('feedback');
   var seal = document.getElementById('waxSeal');
+  var nextBtn = document.getElementById('nextBtn');
+  var waves = document.querySelector('.waves');
   var solved = false;
 
   var correctLines = [
@@ -292,6 +335,10 @@
       feedback.textContent = correctLines[Math.floor(Math.random()*correctLines.length)];
       feedback.className = 'feedback show is-correct';
       seal.classList.add('show');
+      waves.classList.add('hide');
+      setTimeout(function(){
+        nextBtn.classList.add('show');
+      }, 350);
     } else {
       li.classList.add('wrong');
       feedback.textContent = wrongLines[Math.floor(Math.random()*wrongLines.length)];

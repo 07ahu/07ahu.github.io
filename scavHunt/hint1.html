@@ -216,6 +216,22 @@
     background:var(--gold);
   }
 
+  .reward-img{
+    display:block;
+    max-width:100%;
+    height:auto;
+    margin-top:clamp(24px,4vw,34px);
+    border-radius:8px;
+    border:1px solid rgba(90,42,20,0.3);
+    opacity:0;
+    transform:scale(0.85) translateY(12px);
+    transition:opacity 0.45s ease, transform 0.45s cubic-bezier(.34,1.56,.64,1);
+  }
+  .reward-img.show{
+    opacity:1;
+    transform:scale(1) translateY(0);
+  }
+
   @media (max-width:600px){
     .wax-seal{
       top:auto;
@@ -250,6 +266,8 @@
   <div class="feedback" id="feedback"></div>
 
   <a href="clue2.html" class="next-btn" id="nextBtn">Onward to the Next Clue ⚓</a>
+
+  <img src="3.jpg" alt="Treasure clue" class="reward-img" id="rewardImg">
 </div>
 
 <svg class="wax-seal" id="waxSeal" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
@@ -267,6 +285,7 @@
   var feedback = document.getElementById('feedback');
   var seal = document.getElementById('waxSeal');
   var nextBtn = document.getElementById('nextBtn');
+  var rewardImg = document.getElementById('rewardImg');
   var solved = false;
 
   var correctLines = [
@@ -297,6 +316,7 @@
       seal.classList.add('show');
       setTimeout(function(){
         nextBtn.classList.add('show');
+        rewardImg.classList.add('show');
       }, 350);
     } else {
       li.classList.add('wrong');

@@ -2,41 +2,51 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Begin the Hunt</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
 <style>
   *{box-sizing:border-box;}
-
   html,body{
     margin:0;
     padding:0;
     width:100%;
     height:100%;
+    overscroll-behavior:none;
+    background:#1b1108; /* matches the theme so any letterboxing isn't white */
+    -webkit-text-size-adjust:100%;
   }
-
   .screen{
     position:relative;
     width:100%;
-    height:100vh;
+    height:100vh;       /* fallback for browsers without dvh support */
+    height:100dvh;       /* accounts for mobile browser UI (address bar, etc.) */
     overflow:hidden;
   }
-
   .screen img{
     position:absolute;
     inset:0;
     width:100%;
     height:100%;
     object-fit:contain;
+    -webkit-touch-callout:none; /* stop iOS long-press "save image" menu */
+    user-select:none;
   }
-
   .go-btn{
     position:absolute;
-    bottom:clamp(20px,5vh,48px);
     left:50%;
+    bottom:calc(clamp(20px,5vh,48px) + env(safe-area-inset-bottom, 0px));
     transform:translateX(-50%);
     padding:0.7em 1.6em;
-    font-family:Georgia, 'Times New Roman', serif;
-    font-size:clamp(16px,2.4vw,22px);
+    min-height:44px;        /* comfortable tap target on touch devices */
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'IM Fell English', Georgia, 'Times New Roman', serif;
+    font-size:clamp(17px,2.6vw,24px);
+    letter-spacing:0.02em;
     color:#5a2a14;
     background:#f3da8e;
     border:1px solid #5a2a14;
@@ -46,23 +56,32 @@
     box-shadow:0 2px 8px rgba(0,0,0,0.35);
     transition:background 0.2s ease, transform 0.15s ease;
     white-space:nowrap;
+    -webkit-tap-highlight-color:transparent; /* remove gray flash on tap (Android/iOS) */
+    touch-action:manipulation; /* avoid double-tap-to-zoom delay */
   }
-
   .go-btn:hover{
     background:#c9972f;
   }
-
   .go-btn:active{
     transform:translateX(-50%) scale(0.97);
+    background:#c9972f;
+  }
+
+  /* Small phones in landscape (short viewport): pull the button up a bit
+     and shrink padding so it doesn't crowd the bottom edge */
+  @media (max-height:420px){
+    .go-btn{
+      bottom:calc(10px + env(safe-area-inset-bottom, 0px));
+      padding:0.5em 1.2em;
+      font-size:clamp(14px,2.2vw,18px);
+    }
   }
 </style>
 </head>
 <body>
-
 <div class="screen">
   <img src="1.jpg" alt="">
-  <!--<a class="go-btn" href="https://dukeuniv.hub.arcgis.com/pages/scavhunt2~c3a39142be5f4e19b45f3198be153b0a">Begin the Hunt ⚓</a>-->
+  <a class="go-btn" href="https://dukeuniv.hub.arcgis.com/pages/scavhunt2~c3a39142be5f4e19b45f3198be153b0a">Begin the Hunt ⚓</a>
 </div>
-
 </body>
 </html>

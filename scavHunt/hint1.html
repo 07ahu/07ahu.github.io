@@ -104,7 +104,7 @@
     cursor:pointer;
     padding:0.45em 0.7em;
     border-radius:8px;
-    position:relative;
+    position:relative;   /* anchors the wax-seal badge to this row */
     transition:background 0.25s ease, transform 0.15s ease, color 0.25s ease;
     user-select:none;
     border:1px solid transparent;
@@ -171,18 +171,20 @@
   .feedback.is-correct{color:#3c5c1f; font-weight:bold; font-style:normal;}
   .feedback.is-wrong{color:var(--wrong);}
 
-  /* wax seal signature element */
+  /* wax seal badge — sits docked to the top-right corner of the
+     correct answer's row, small and out of the way of the text */
   .wax-seal{
     position:absolute;
-    right:clamp(18px,6vw,60px);
-    top:clamp(170px,22vw,230px);
-    width:clamp(90px,11vw,130px);
-    height:clamp(90px,11vw,130px);
+    top:-9px;
+    right:2px;
+    width:clamp(26px,7vw,36px);
+    height:clamp(26px,7vw,36px);
     opacity:0;
     transform:scale(0.2) rotate(-35deg);
     transition:opacity 0.5s ease, transform 0.5s cubic-bezier(.34,1.56,.64,1);
     pointer-events:none;
-    filter:drop-shadow(0 4px 6px rgba(0,0,0,0.35));
+    filter:drop-shadow(0 2px 4px rgba(0,0,0,0.35));
+    z-index:5;
   }
   .wax-seal.show{
     opacity:1;
@@ -232,11 +234,14 @@
     transform:scale(1) translateY(0);
   }
 
-  @media (max-width:600px){
+  /* extra-small phones: keep the seal compact and tucked in close
+     so it never overhangs off the edge of the screen */
+  @media (max-width:480px){
     .wax-seal{
-      top:auto;
-      bottom:clamp(90px,18vw,130px);
-      right:clamp(14px,5vw,26px);
+      top:-7px;
+      right:0px;
+      width:clamp(22px,8vw,30px);
+      height:clamp(22px,8vw,30px);
     }
   }
 </style>
@@ -255,7 +260,16 @@
   </div>
 
   <ul class="options" id="options">
-    <li data-letter="A" data-correct="true"><span class="letter">A)</span> The sharp-shelled oysters</li>
+    <li data-letter="A" data-correct="true">
+      <span class="letter">A)</span> The sharp-shelled oysters
+      <svg class="wax-seal" id="waxSeal" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="46" fill="#9b2b1f"/>
+        <circle cx="50" cy="50" r="46" fill="none" stroke="#6e1d14" stroke-width="2"/>
+        <circle cx="50" cy="50" r="38" fill="none" stroke="#c9972f" stroke-width="1.5" opacity="0.7"/>
+        <path d="M50 22 L58 40 L78 42 L62 54 L67 74 L50 63 L33 74 L38 54 L22 42 L42 40 Z" fill="#c9972f"/>
+        <circle cx="50" cy="50" r="46" fill="none" stroke="#000" stroke-width="0.5" opacity="0.2"/>
+      </svg>
+    </li>
     <li data-letter="B"><span class="letter">B)</span> The clever octopus</li>
     <li data-letter="C"><span class="letter">C)</span> The glowing jellyfish</li>
     <li data-letter="D"><span class="letter">D)</span> The gentle giant whale</li>
@@ -269,15 +283,6 @@
 
   <a href="clue2.html" class="next-btn" id="nextBtn">Onward to the Next Clue ⚓</a>
 </div>
-
-<svg class="wax-seal" id="waxSeal" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-  <circle cx="50" cy="50" r="46" fill="#9b2b1f"/>
-  <circle cx="50" cy="50" r="46" fill="none" stroke="#6e1d14" stroke-width="2"/>
-  <circle cx="50" cy="50" r="38" fill="none" stroke="#c9972f" stroke-width="1.5" opacity="0.7"/>
-  <path d="M50 22 L58 40 L78 42 L62 54 L67 74 L50 63 L33 74 L38 54 L22 42 L42 40 Z" fill="#c9972f"/>
-  <circle cx="50" cy="50" r="46" fill="none" stroke="#000" stroke-width="0.5" opacity="0.2"/>
-</svg>
-
 
 <script>
 (function(){

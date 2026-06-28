@@ -60,7 +60,7 @@
   .hero{
     position:relative;
     z-index:1;
-    padding:clamp(34px,7vw,64px) clamp(20px,8vw,80px) clamp(130px,19vw,180px);
+    padding:clamp(34px,7vw,64px) clamp(20px,8vw,80px) clamp(18px,3vw,28px);
     display:flex;
     flex-direction:column;
     align-items:center;
@@ -92,22 +92,6 @@
     color:var(--ink);
     margin:0;
     max-width:640px;
-  }
-
-  /* space reserved for your own ship photo — framed like a
-     snapshot, tucked into the bottom-left of the hero */
-  .ship-art{
-    position:absolute;
-    left:clamp(10px,4vw,30px);
-    bottom:clamp(10px,2vw,20px);
-    width:clamp(130px,24vw,200px);
-    height:auto;
-    object-fit:cover;
-    background:#fff;
-    border:6px solid #fff;
-    border-radius:4px;
-    box-shadow:0 4px 10px rgba(0,0,0,0.35);
-    transform:rotate(-4deg);
   }
 
   .content-wrap{
@@ -237,8 +221,6 @@
   <h1 class="hero-title">Find the oyster drain!</h1>
   <p class="hero-hint">If ye need a hint: Go look at the street across from MoonRakers!</p>
   <p class="hero-instructions">Once ye get there, I want ye to snap a picture of your team posing like oyster (squeeze tight together like a cluster).</p>
-
-  <!--<img class="ship-art" src="ship.png" alt="Our crew's ship">-->
 </div>
 
 <div class="content-wrap">

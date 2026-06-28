@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Snap a Shot with the Hermit Crab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pirata+One&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --parchment-1:#e3c896;
+    --parchment-2:#cfa86c;
+    --ink:#5a2a14;
+    --ink-soft:#6e3a1c;
+    --gold:#c9972f;
+    --gold-light:#f3da8e;
+  }
+
+  *{box-sizing:border-box;}
+
+  html,body{
+    margin:0;
+    padding:0;
+    width:100%;
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+
+  body{
+    font-family:'IM Fell English', serif;
+    color:var(--ink);
+    background:var(--parchment-2);
+    position:relative;
+  }
+
+  /* parchment texture, recreated with layered gradients + grain
+     instead of a flat exported image */
+  .parchment-bg{
+    position:fixed;
+    inset:0;
+    z-index:0;
+    background:
+      radial-gradient(ellipse 60% 40% at 12% 8%, rgba(184,137,90,0.55), transparent 60%),
+      radial-gradient(ellipse 50% 35% at 90% 15%, rgba(184,137,90,0.5), transparent 60%),
+      radial-gradient(ellipse 45% 30% at 75% 70%, rgba(184,137,90,0.45), transparent 60%),
+      radial-gradient(ellipse 55% 45% at 8% 85%, rgba(184,137,90,0.4), transparent 60%),
+      radial-gradient(ellipse 70% 50% at 50% 50%, rgba(227,200,150,0.5), transparent 65%),
+      linear-gradient(160deg, var(--parchment-1), var(--parchment-2) 55%, #b8895a);
+  }
+  .parchment-bg::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    opacity:0.35;
+    mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 0.35  0 0 0 0 0.22  0 0 0 0 0.1  0 0 0 0.35 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+
+  .hero{
+    position:relative;
+    z-index:1;
+    padding:clamp(34px,7vw,64px) clamp(20px,8vw,80px) clamp(18px,3vw,28px);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+  }
+
+  .hero-title{
+    font-family:'Pirata One', serif;
+    font-weight:400;
+    color:var(--ink);
+    font-size:clamp(30px,5.5vw,52px);
+    line-height:1.15;
+    margin:0 0 clamp(14px,2.5vw,20px) 0;
+    text-shadow:0 1px 0 rgba(255,255,255,0.25);
+    letter-spacing:0.5px;
+  }
+
+  .hero-hint{
+    font-size:clamp(19px,6vw,30px);
+    font-style:italic;
+    color:var(--ink-soft);
+    margin:0 0 clamp(22px,3.5vw,32px) 0;
+    max-width:560px;
+  }
+
+  .hero-instructions{
+    font-size:clamp(18px,2.6vw,25px);
+    line-height:1.55;
+    color:var(--ink);
+    margin:0;
+    max-width:640px;
+  }
+
+  .content-wrap{
+    position:relative;
+    z-index:1;
+    padding:clamp(22px,5vw,40px) clamp(20px,6vw,60px) clamp(40px,6vw,60px);
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    justify-content:center;
+    gap:clamp(20px,4vw,40px);
+  }
+
+  /* photo/video capture box */
+  .photo-box{
+    width:min(420px,90vw);
+    aspect-ratio:4/3;
+    border:3px dashed var(--ink);
+    border-radius:16px;
+    background:rgba(255,255,255,0.25);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    text-align:center;
+    padding:18px;
+    cursor:pointer;
+    position:relative;
+    overflow:hidden;
+    transition:background 0.2s ease, transform 0.15s ease, border-color 0.2s ease;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .photo-box:hover{
+    background:rgba(255,255,255,0.4);
+  }
+  .photo-box:active{
+    transform:scale(0.985);
+  }
+  .photo-box.has-photo{
+    border-style:solid;
+    border-color:var(--gold);
+  }
+  .photo-box input[type="file"]{
+    display:none;
+  }
+  .photo-box .icon{
+    width:clamp(36px,9vw,52px);
+    height:clamp(36px,9vw,52px);
+    flex-shrink:0;
+  }
+  .photo-box .label{
+    font-size:clamp(16px,2.4vw,20px);
+    color:var(--ink-soft);
+    font-style:italic;
+    line-height:1.4;
+    max-width:280px;
+  }
+  .photo-box .retake-hint{
+    position:absolute;
+    bottom:8px;
+    left:0;
+    right:0;
+    text-align:center;
+    font-size:13px;
+    font-style:italic;
+    color:#fff;
+    background:rgba(90,42,20,0.55);
+    padding:4px 6px;
+    opacity:0;
+    transition:opacity 0.2s ease;
+  }
+  .photo-box.has-photo:hover .retake-hint,
+  .photo-box.has-photo:active .retake-hint{
+    opacity:1;
+  }
+  .photo-box img.preview,
+  .photo-box video.preview{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    background:#000;
+  }
+
+  .photo-col{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:8px;
+  }
+
+  .save-hint{
+    font-size:14px;
+    font-style:italic;
+    color:var(--ink-soft);
+    text-align:center;
+    max-width:280px;
+  }
+
+  .save-btn{
+    font-family:'IM Fell English', serif;
+    font-size:clamp(14px,1.8vw,16px);
+    color:var(--ink);
+    background:rgba(255,255,255,0.5);
+    border:1px solid var(--ink);
+    border-radius:6px;
+    padding:0.4em 1em;
+    cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+    touch-action:manipulation;
+  }
+  .save-btn:hover{
+    background:rgba(255,255,255,0.8);
+  }
+  .save-btn:active{
+    transform:scale(0.97);
+  }
+
+  /* next-clue button, same family as the other pages */
+  .next-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-height:50px;
+    padding:0.7em 1.7em;
+    font-family:'IM Fell English', serif;
+    font-size:clamp(17px,2.4vw,21px);
+    color:var(--ink);
+    background:var(--gold-light);
+    border:1px solid var(--ink);
+    border-radius:8px;
+    text-decoration:none;
+    cursor:pointer;
+    box-shadow:0 2px 8px rgba(0,0,0,0.25);
+    transition:background 0.2s ease, transform 0.15s ease;
+    white-space:nowrap;
+    -webkit-tap-highlight-color:transparent;
+    touch-action:manipulation;
+  }
+  .next-btn:hover{
+    background:var(--gold);
+  }
+  .next-btn:active{
+    transform:scale(0.97);
+  }
+
+  /* Stack vertically and center on narrow screens so nothing
+     gets cramped — the side-by-side layout is for wider screens */
+  @media (max-width:640px){
+    .content-wrap{
+      flex-direction:column;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="parchment-bg"></div>
+
+<div class="hero">
+  <h1 class="hero-title">Snap a Shot with the Hermit Crab!!</h1>
+  <p class="hero-hint">If ye be scuttlin' in circles: Look in front of the Historic Site!</p>
+  <p class="hero-instructions">Do your best crab walk 🦀 in front of the crab drain! Take a funny video or picture.</p>
+</div>
+
+<div class="content-wrap">
+
+  <div class="photo-col">
+    <label class="photo-box" id="photoBox">
+      <input type="file" accept="image/*,video/*" capture="environment" id="photoInput">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" color="#5a2a14">
+        <path d="M4 7h3l1.5-2h7L17 7h3a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1z"/>
+        <circle cx="12" cy="13" r="3.5"/>
+      </svg>
+      <span class="label" id="photoLabel">Tap here to capture your best crab walk 🦀</span>
+      <img class="preview" id="photoPreview" alt="" hidden>
+      <video class="preview" id="videoPreview" muted playsinline controls hidden></video>
+      <span class="retake-hint">Tap to retake</span>
+    </label>
+    <button type="button" class="save-btn" id="saveBtn" hidden>Save to my phone 📲</button>
+    <p class="save-hint" id="saveHint" hidden></p>
+  </div>
+
+  <a href="clue4.html" class="next-btn" id="nextBtn">Next Clue ⚓</a>
+
+</div>
+
+<script>
+(function(){
+  var box = document.getElementById('photoBox');
+  var input = document.getElementById('photoInput');
+  var photoPreview = document.getElementById('photoPreview');
+  var videoPreview = document.getElementById('videoPreview');
+  var label = document.getElementById('photoLabel');
+  var saveBtn = document.getElementById('saveBtn');
+  var saveHint = document.getElementById('saveHint');
+  var currentFile = null;
+  var currentUrl = null;
+
+  function isVideo(file){
+    return file.type && file.type.indexOf('video') === 0;
+  }
+
+  function fallbackName(file){
+    return isVideo(file) ? 'hermit-crab-drain-video.mp4' : 'hermit-crab-drain-photo.jpg';
+  }
+
+  saveBtn.addEventListener('click', function(){
+    if(!currentFile) return;
+
+    // Native share sheet lets the user pick "Save Image"/"Save Video"
+    // themselves — this is the only way a webpage is allowed to hand
+    // media to the OS photo library (browsers don't allow silent writes).
+    if(navigator.canShare && navigator.canShare({ files: [currentFile] })){
+      navigator.share({ files: [currentFile], title: 'Hermit crab drain crew clip' }).catch(function(){
+        /* user cancelled the share sheet — nothing to do */
+      });
+    } else {
+      // Fallback for browsers without file sharing support: trigger a
+      // normal download, and tell folks how to save it on iOS Safari
+      var url = URL.createObjectURL(currentFile);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = currentFile.name || fallbackName(currentFile);
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 2000);
+      saveHint.hidden = false;
+      saveHint.textContent = 'Downloaded! On iPhone: press and hold the photo above (or open the video), then save it to your library.';
+    }
+  });
+
+  input.addEventListener('change', function(){
+    var file = input.files && input.files[0];
+    if(!file) return;
+    currentFile = file;
+
+    if(currentUrl) URL.revokeObjectURL(currentUrl);
+    currentUrl = URL.createObjectURL(file);
+
+    if(isVideo(file)){
+      videoPreview.src = currentUrl;
+      videoPreview.hidden = false;
+      photoPreview.hidden = true;
+    } else {
+      photoPreview.src = currentUrl;
+      photoPreview.hidden = false;
+      videoPreview.hidden = true;
+    }
+
+    label.hidden = true;
+    box.classList.add('has-photo');
+    saveBtn.hidden = false;
+  });
+})();
+</script>
+
+</body>
+</html>

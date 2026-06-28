@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ye Second Clue</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pirata+One&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --parchment-1:#e3c896;
+    --parchment-2:#cfa86c;
+    --parchment-3:#b8895a;
+    --ink:#5a2a14;
+    --ink-soft:#6e3a1c;
+    --gold:#c9972f;
+    --gold-light:#f3da8e;
+    --wrong:#8a2c1f;
+  }
+
+  *{box-sizing:border-box;}
+
+  html,body{
+    margin:0;
+    padding:0;
+    width:100%;
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+
+  body{
+    font-family:'IM Fell English', serif;
+    color:var(--ink);
+    background:var(--parchment-2);
+    position:relative;
+  }
+
+  /* parchment texture: blotchy radial gradients + grain */
+  .parchment-bg{
+    position:fixed;
+    inset:0;
+    z-index:0;
+    background:
+      radial-gradient(ellipse 60% 40% at 12% 8%, rgba(184,137,90,0.55), transparent 60%),
+      radial-gradient(ellipse 50% 35% at 90% 15%, rgba(184,137,90,0.5), transparent 60%),
+      radial-gradient(ellipse 45% 30% at 75% 70%, rgba(184,137,90,0.45), transparent 60%),
+      radial-gradient(ellipse 55% 45% at 8% 85%, rgba(184,137,90,0.4), transparent 60%),
+      radial-gradient(ellipse 70% 50% at 50% 50%, rgba(227,200,150,0.5), transparent 65%),
+      linear-gradient(160deg, var(--parchment-1), var(--parchment-2) 55%, var(--parchment-3));
+  }
+  .parchment-bg::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    opacity:0.35;
+    mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 0.35  0 0 0 0 0.22  0 0 0 0 0.1  0 0 0 0.35 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+
+  .stage{
+    position:relative;
+    z-index:1;
+    max-width:980px;
+    margin:0 auto;
+    padding:clamp(28px,5vw,56px) clamp(24px,6vw,70px) clamp(40px,6vw,60px);
+  }
+
+  h1{
+    font-family:'Pirata One', serif;
+    font-weight:400;
+    color:var(--ink);
+    font-size:clamp(28px,4.2vw,46px);
+    line-height:1.15;
+    margin:0 0 clamp(18px,3vw,30px) 0;
+    text-shadow:0 1px 0 rgba(255,255,255,0.25);
+    letter-spacing:0.5px;
+  }
+
+  .riddle{
+    font-size:clamp(17px,4vw,21px);
+    line-height:1.7;
+    font-style:italic;
+    color:var(--ink-soft);
+    margin:0 0 clamp(28px,4vw,38px) 0;
+    max-width:680px;
+  }
+  .riddle p{margin:0;}
+  .riddle .indent{display:block; padding-left:2.2em;}
+
+  ul.options{
+    list-style:none;
+    margin:0;
+    padding:0;
+    display:flex;
+    flex-direction:column;
+    gap:clamp(8px,1.3vw,14px);
+    max-width:640px;
+  }
+
+  ul.options li{
+    font-size:clamp(18px,2.3vw,23px);
+    color:var(--ink);
+    cursor:pointer;
+    padding:0.45em 0.7em;
+    border-radius:8px;
+    position:relative;   /* anchors the wax-seal badge to this row */
+    transition:background 0.25s ease, transform 0.15s ease, color 0.25s ease;
+    user-select:none;
+    border:1px solid transparent;
+  }
+
+  ul.options li .letter{
+    font-weight:bold;
+    margin-right:0.3em;
+  }
+
+  ul.options:not(.locked) li:hover{
+    background:rgba(255,255,255,0.22);
+    border-color:rgba(90,42,20,0.25);
+    transform:translateX(4px);
+  }
+
+  ul.options li:active{
+    transform:translateX(4px) scale(0.99);
+  }
+
+  ul.options li.wrong{
+    animation:shake 0.4s ease;
+    color:var(--wrong);
+    background:rgba(138,44,31,0.12);
+    border-color:rgba(138,44,31,0.35);
+  }
+
+  ul.options li.correct{
+    color:#3c5c1f;
+    background:rgba(201,151,47,0.25);
+    border-color:var(--gold);
+  }
+
+  ul.options.locked li{
+    cursor:default;
+  }
+  ul.options.locked li:not(.correct){
+    opacity:0.45;
+  }
+
+  @keyframes shake{
+    0%,100%{transform:translateX(0);}
+    20%{transform:translateX(-6px);}
+    40%{transform:translateX(6px);}
+    60%{transform:translateX(-4px);}
+    80%{transform:translateX(4px);}
+  }
+
+  .feedback{
+    min-height:1.6em;
+    margin-top:clamp(20px,3vw,28px);
+    font-size:clamp(16px,2vw,19px);
+    font-style:italic;
+    color:var(--ink-soft);
+    max-width:640px;
+    opacity:0;
+    transform:translateY(-4px);
+    transition:opacity 0.35s ease, transform 0.35s ease;
+  }
+  .feedback.show{
+    opacity:1;
+    transform:translateY(0);
+  }
+  .feedback.is-correct{color:#3c5c1f; font-weight:bold; font-style:normal;}
+  .feedback.is-wrong{color:var(--wrong);}
+
+  /* wax seal badge — sits docked to the top-right corner of the
+     correct answer's row, small and out of the way of the text */
+  .wax-seal{
+    position:absolute;
+    top:-9px;
+    right:2px;
+    width:clamp(26px,7vw,36px);
+    height:clamp(26px,7vw,36px);
+    opacity:0;
+    transform:scale(0.2) rotate(-35deg);
+    transition:opacity 0.5s ease, transform 0.5s cubic-bezier(.34,1.56,.64,1);
+    pointer-events:none;
+    filter:drop-shadow(0 2px 4px rgba(0,0,0,0.35));
+    z-index:5;
+  }
+  .wax-seal.show{
+    opacity:1;
+    transform:scale(1) rotate(-8deg);
+  }
+
+  /* next-clue button */
+  .next-btn{
+    display:inline-block;
+    margin-top:clamp(24px,4vw,34px);
+    padding:0.55em 1.3em;
+    font-family:'IM Fell English', serif;
+    font-size:clamp(16px,1.9vw,19px);
+    color:var(--ink);
+    background:var(--gold-light);
+    border:1px solid var(--ink);
+    border-radius:6px;
+    text-decoration:none;
+    cursor:pointer;
+    opacity:0;
+    transform:translateY(8px);
+    pointer-events:none;
+    transition:opacity 0.35s ease, transform 0.35s ease, background 0.2s ease;
+  }
+  .next-btn.show{
+    opacity:1;
+    transform:translateY(0);
+    pointer-events:auto;
+  }
+  .next-btn:hover{
+    background:var(--gold);
+  }
+
+  .reward-img{
+    display:block;
+    max-width:100%;
+    height:auto;
+    margin-top:clamp(24px,4vw,34px);
+    border-radius:8px;
+    border:1px solid rgba(90,42,20,0.3);
+    opacity:0;
+    transform:scale(0.85) translateY(12px);
+    transition:opacity 0.45s ease, transform 0.45s cubic-bezier(.34,1.56,.64,1);
+  }
+  .reward-img.show{
+    opacity:1;
+    transform:scale(1) translateY(0);
+  }
+
+  /* extra-small phones: keep the seal compact and tucked in close
+     so it never overhangs off the edge of the screen */
+  @media (max-width:480px){
+    .wax-seal{
+      top:-7px;
+      right:0px;
+      width:clamp(22px,8vw,30px);
+      height:clamp(22px,8vw,30px);
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="parchment-bg"></div>
+
+<div class="stage">
+  <h1>Arrrr ye ready fer yer second clue? This one stumped my crew.</h1>
+
+  <div class="riddle">
+    <p>I float with grace, no bones in me, near
+    <span class="indent">Beaufort Linen, by the salty sea!</span></p>
+  </div>
+
+  <ul class="options" id="options">
+    <li data-letter="A"><span class="letter">A)</span> The sharp-shelled oysters</li>
+    <li data-letter="B"><span class="letter">B)</span> The clever octopus</li>
+    <li data-letter="C" data-correct="true">
+      <span class="letter">C)</span> The glowing jellyfish
+      <svg class="wax-seal" id="waxSeal" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="46" fill="#9b2b1f"/>
+        <circle cx="50" cy="50" r="46" fill="none" stroke="#6e1d14" stroke-width="2"/>
+        <circle cx="50" cy="50" r="38" fill="none" stroke="#c9972f" stroke-width="1.5" opacity="0.7"/>
+        <path d="M50 22 L58 40 L78 42 L62 54 L67 74 L50 63 L33 74 L38 54 L22 42 L42 40 Z" fill="#c9972f"/>
+        <circle cx="50" cy="50" r="46" fill="none" stroke="#000" stroke-width="0.5" opacity="0.2"/>
+      </svg>
+    </li>
+    <li data-letter="D"><span class="letter">D)</span> The gentle giant whale</li>
+    <li data-letter="E"><span class="letter">E)</span> The speedy fish</li>
+    <li data-letter="F"><span class="letter">F)</span> The wandering hermit crab</li>
+  </ul>
+
+  <div class="feedback" id="feedback"></div>
+
+  <img src="funFactImgs/jellyfishFact.jpg" alt="Treasure clue" class="reward-img" id="rewardImg">
+
+  <a href="stop2.html" class="next-btn" id="nextBtn">Now Find the Next Clue!</a>
+</div>
+
+<script>
+(function(){
+  var list = document.getElementById('options');
+  var feedback = document.getElementById('feedback');
+  var seal = document.getElementById('waxSeal');
+  var nextBtn = document.getElementById('nextBtn');
+  var rewardImg = document.getElementById('rewardImg');
+  var solved = false;
+
+  var correctLines = [
+    "Aye, ye've got it! No bones, no fins, just driftin' grace \u2014 the jellyfish glides past Beaufort Linen like a ghost o' the sea.",
+    "That be it, matey! Boneless and driftin' with the current, the jellyfish floats by Beaufort Linen sure as the tide."
+  ];
+  var wrongLines = [
+    "Nay, not that one. Think of summat with no bones at all, just floatin' soft on the tide near Beaufort Linen.",
+    "Arrr, wrong creature. Look fer one that drifts boneless and graceful along the salty shore."
+  ];
+
+  list.addEventListener('click', function(e){
+    var li = e.target.closest('li');
+    if(!li || solved) return;
+
+    var isCorrect = li.dataset.correct === 'true';
+
+    Array.prototype.forEach.call(list.children, function(item){
+      item.classList.remove('wrong');
+    });
+
+    if(isCorrect){
+      solved = true;
+      li.classList.add('correct');
+      list.classList.add('locked');
+      feedback.textContent = correctLines[Math.floor(Math.random()*correctLines.length)];
+      feedback.className = 'feedback show is-correct';
+      seal.classList.add('show');
+      setTimeout(function(){
+        nextBtn.classList.add('show');
+        rewardImg.classList.add('show');
+      }, 350);
+    } else {
+      li.classList.add('wrong');
+      feedback.textContent = wrongLines[Math.floor(Math.random()*wrongLines.length)];
+      feedback.className = 'feedback show is-wrong';
+      setTimeout(function(){
+        li.classList.remove('wrong');
+      }, 420);
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

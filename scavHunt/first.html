@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Pirate Hunt</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pirata+One&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --parchment-1:#e3c896;
+    --parchment-2:#cfa86c;
+    --parchment-3:#b8895a;
+    --ink:#5a2a14;
+    --ink-soft:#6e3a1c;
+    --gold:#c9972f;
+    --gold-light:#f3da8e;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+
+  html,body{
+    width:100%;
+    height:100%;
+    overscroll-behavior:none;
+    -webkit-text-size-adjust:100%;
+  }
+
+  body{
+    font-family:'IM Fell English', serif;
+    color:var(--ink);
+    background:var(--parchment-2);
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:100vh;
+    min-height:100dvh;
+    overflow:hidden;
+  }
+
+  .bg-photo{
+    position:fixed;
+    inset:0;
+    z-index:-1;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    -webkit-touch-callout:none;
+    user-select:none;
+  }
+
+  /* parchment texture: blotchy radial gradients + grain */
+  .parchment-bg{
+    position:fixed;
+    inset:0;
+    z-index:0;
+    background:
+      radial-gradient(ellipse 60% 40% at 12% 8%, rgba(184,137,90,0.55), transparent 60%),
+      radial-gradient(ellipse 50% 35% at 90% 15%, rgba(184,137,90,0.5), transparent 60%),
+      radial-gradient(ellipse 45% 30% at 75% 70%, rgba(184,137,90,0.45), transparent 60%),
+      radial-gradient(ellipse 55% 45% at 8% 85%, rgba(184,137,90,0.4), transparent 60%),
+      radial-gradient(ellipse 70% 50% at 50% 50%, rgba(227,200,150,0.5), transparent 65%),
+      linear-gradient(160deg, var(--parchment-1), var(--parchment-2) 55%, var(--parchment-3));
+  }
+  .parchment-bg::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    opacity:0.35;
+    mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 0.35  0 0 0 0 0.22  0 0 0 0 0.1  0 0 0 0.35 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+
+  /* ── START SCREEN ── */
+  #startContainer{
+    position:relative;
+    z-index:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:clamp(16px,3vw,28px);
+    transition:opacity 0.5s ease;
+  }
+
+  #rolled{
+    width:clamp(140px,28vw,220px);
+    cursor:pointer;
+    animation:float 3s ease-in-out infinite;
+    transition:transform 0.3s ease;
+    filter:drop-shadow(0 6px 10px rgba(0,0,0,0.35));
+    -webkit-tap-highlight-color:transparent;
+    touch-action:manipulation;
+  }
+  #rolled:hover{ transform:scale(1.06); }
+  #rolled:active{ transform:scale(0.97); }
+
+  #clickPrompt{
+    font-family:'Pirata One', cursive;
+    font-size:clamp(22px,4.5vw,34px);
+    color:var(--ink);
+    text-shadow:0 1px 0 rgba(255,255,255,0.3);
+    animation:pulse 1.6s ease-in-out infinite;
+    user-select:none;
+    letter-spacing:0.5px;
+  }
+
+  /* ── OPEN SCROLL ── */
+  #openScroll{
+    position:absolute;
+    z-index:1;
+    width:min(860px,92vw);
+    opacity:0;
+    transform:scale(0.82);
+    transition:opacity 0.7s ease, transform 0.7s cubic-bezier(.34,1.56,.64,1);
+    pointer-events:none;
+  }
+  #openScroll.show{
+    opacity:1;
+    transform:scale(1);
+    pointer-events:auto;
+  }
+
+  #scrollImage{
+    width:100%;
+    display:block;
+    filter:drop-shadow(0 8px 18px rgba(0,0,0,0.4));
+  }
+
+  /* ── CONTENT overlaid on the open scroll ── */
+  #content{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-52%);
+    width:62%;
+    text-align:center;
+    color:var(--ink);
+  }
+
+  #title{
+    font-family:'Pirata One', cursive;
+    font-weight:400;
+    font-size:clamp(24px,4.8vw,46px);
+    line-height:1.2;
+    margin-bottom:clamp(12px,2vw,22px);
+    text-shadow:0 1px 0 rgba(255,255,255,0.25);
+    letter-spacing:0.5px;
+  }
+
+  #message{
+    font-family:'IM Fell English', serif;
+    font-size:clamp(19px,3.2vw,28px);
+    line-height:1.6;
+    color:var(--ink-soft);
+    font-style:italic;
+    white-space:pre-line;
+    min-height:clamp(100px,16vw,170px);
+  }
+
+  /* ── BEGIN button ── */
+  #buttonContainer{
+    opacity:0;
+    transform:translateY(20px);
+    transition:opacity 0.6s ease, transform 0.6s ease;
+  }
+  #buttonContainer.show{
+    opacity:1;
+    transform:translateY(0);
+  }
+
+  #beginBtn{
+    margin-top:clamp(14px,2.5vw,22px);
+    padding:0.65em 1.5em;
+    min-height:44px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'IM Fell English', serif;
+    font-size:clamp(17px,2.4vw,22px);
+    letter-spacing:0.02em;
+    color:var(--ink);
+    background:var(--gold-light);
+    border:1px solid var(--ink);
+    border-radius:6px;
+    cursor:pointer;
+    box-shadow:0 2px 8px rgba(0,0,0,0.25);
+    transition:background 0.2s ease, transform 0.15s ease;
+    white-space:nowrap;
+    -webkit-tap-highlight-color:transparent;
+    touch-action:manipulation;
+  }
+  #beginBtn:hover{ background:var(--gold); }
+  #beginBtn:active{ transform:scale(0.97); background:var(--gold); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes float{
+    0%,100%{ transform:translateY(0); }
+    50%{ transform:translateY(-10px); }
+  }
+  @keyframes pulse{
+    0%,100%{ opacity:0.55; }
+    50%{ opacity:1; }
+  }
+
+  @media (max-height:500px){
+    #title{ font-size:clamp(18px,3.5vw,26px); }
+    #message{ font-size:clamp(15px,2.4vw,20px); min-height:60px; }
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    #rolled{ animation:none; }
+    #clickPrompt{ animation:none; opacity:1; }
+  }
+</style>
+</head>
+<body>
+
+<img class="bg-photo" src="background.png" alt="">
+<div class="parchment-bg"></div>
+
+<!-- START: rolled-up scroll -->
+<div id="startContainer">
+  <img src="rolled.png" id="rolled" alt="Rolled scroll">
+  <div id="clickPrompt">📜 Tap the scroll to begin</div>
+</div>
+
+<!-- OPEN: unrolled scroll with text -->
+<div id="openScroll">
+  <img src="unrolled.png" id="scrollImage" alt="Unrolled scroll">
+  <div id="content">
+    <h1 id="title"></h1>
+    <p id="message"></p>
+    <div id="buttonContainer">
+      <button id="beginBtn" onclick="window.location.href='first.html'">
+        Begin the Hunt ⚓
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var rolled = document.getElementById('rolled');
+  var startContainer = document.getElementById('startContainer');
+  var openScroll = document.getElementById('openScroll');
+
+  rolled.addEventListener('click', function(){
+    startContainer.style.opacity = '0';
+    setTimeout(function(){
+      startContainer.style.display = 'none';
+      openScroll.classList.add('show');
+      typeTitle();
+    }, 500);
+  });
+
+  var titleText = 'Ahoy Me Hearties!';
+  var bodyText =
+    'Welcome to yer mission!\n\n' +
+    'I seem to have lost some sea creatures.\n\n' +
+    'Can ye help me find them?\n\n' +
+    'All Hands on Deck!';
+
+  function typeWriter(el, text, speed, callback){
+    var i = 0;
+    (function type(){
+      if(i < text.length){
+        el.innerHTML += text.charAt(i++);
+        setTimeout(type, speed);
+      } else if(callback){
+        callback();
+      }
+    })();
+  }
+
+  function typeTitle(){
+    typeWriter(
+      document.getElementById('title'), titleText, 70,
+      function(){
+        typeWriter(
+          document.getElementById('message'), bodyText, 25,
+          function(){
+            document.getElementById('buttonContainer').classList.add('show');
+          }
+        );
+      }
+    );
+  }
+})();
+</script>
+
+</body>
+</html>

@@ -15,7 +15,7 @@
     --ink:#5a2a14;
     --ink-soft:#6e3a1c;
     --gold:#c9972f;
-    --gold-light:#5a2a14;
+    --gold-light:#f3da8e;
   }
 
   *{box-sizing:border-box; margin:0; padding:0;}
@@ -75,7 +75,7 @@
 
   /* ── START SCREEN ── */
   #startContainer{
-    position:absolute;
+    position:fixed;
     top:50%;
     left:50%;
     transform:translate(-50%,-50%);
@@ -188,8 +188,8 @@
     font-family:'IM Fell English', serif;
     font-size:clamp(17px,2.4vw,22px);
     letter-spacing:0.02em;
-    color:white;
-    background:var(--gold-light);
+    color:#ffffff;
+    background:#5a2a14;
     border:1px solid var(--ink);
     border-radius:6px;
     cursor:pointer;
@@ -199,8 +199,8 @@
     -webkit-tap-highlight-color:transparent;
     touch-action:manipulation;
   }
-  #beginBtn:hover{ background:var(--gold); }
-  #beginBtn:active{ transform:scale(0.97); background:var(--gold); }
+  #beginBtn:hover{ background:#7a3a1c; }
+  #beginBtn:active{ transform:scale(0.97); background:#7a3a1c; }
 
   /* ── ANIMATIONS ── */
   @keyframes float{
@@ -230,13 +230,13 @@
 
 <!-- START: rolled-up scroll -->
 <div id="startContainer">
-  <img src="rolled.png" id="rolled" alt="Rolled scroll">
+  <img src="3.png" id="rolled" alt="Rolled scroll">
   <div id="clickPrompt">📜 Tap the scroll to begin</div>
 </div>
 
 <!-- OPEN: unrolled scroll with text -->
 <div id="openScroll">
-  <img src="unrolled.png" id="scrollImage" alt="Unrolled scroll">
+  <img src="4.png" id="scrollImage" alt="Unrolled scroll">
   <div id="content">
     <h1 id="title"></h1>
     <p id="message"></p>

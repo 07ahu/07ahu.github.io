@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Stretch Like an Octopus</title>
+<title>Pose with the Whale Drain</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Pirata+One&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
@@ -76,14 +76,6 @@
     margin:0 0 clamp(14px,2.5vw,20px) 0;
     text-shadow:0 1px 0 rgba(255,255,255,0.25);
     letter-spacing:0.5px;
-  }
-
-  .hero-hint{
-    font-size:clamp(19px,6vw,30px);
-    font-style:italic;
-    color:var(--ink-soft);
-    margin:0 0 clamp(22px,3.5vw,32px) 0;
-    max-width:560px;
   }
 
   .hero-instructions{
@@ -210,8 +202,8 @@
     transform:scale(0.97);
   }
 
-  /* next-clue button, same family as the other pages */
-  .next-btn{
+  /* finish button, keeping custom look matching your design specifications */
+  .finish-btn{
     display:inline-flex;
     align-items:center;
     justify-content:center;
@@ -219,9 +211,9 @@
     padding:0.7em 1.7em;
     font-family:'IM Fell English', serif;
     font-size:clamp(17px,2.4vw,21px);
-    color:var(--ink);
-    background:var(--gold-light);
-    border:1px solid var(--ink);
+    color:#5a2a14;
+    background:#00000000;
+    border:5px solid var(--ink);
     border-radius:8px;
     text-decoration:none;
     cursor:pointer;
@@ -231,11 +223,16 @@
     -webkit-tap-highlight-color:transparent;
     touch-action:manipulation;
   }
-  .next-btn:hover{
-    background:var(--gold);
+  .finish-btn:hover{
+    background:#fffdbd;
   }
-  .next-btn:active{
+  .finish-btn:active{
     transform:scale(0.97);
+    background:#fffdbd;
+  }
+
+  .report-section .finish-btn{
+    margin-top:clamp(8px,1.5vw,14px);
   }
 
   /* Stack vertically and center on narrow screens so nothing
@@ -245,6 +242,67 @@
       flex-direction:column;
     }
   }
+
+  /* trash report call-to-action, sits below the photo/next-clue row */
+  .report-section{
+    position:relative;
+    z-index:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    gap:clamp(14px,2.5vw,20px);
+    padding:clamp(24px,5vw,40px) clamp(20px,6vw,60px) clamp(50px,8vw,80px);
+    border-top:1px solid rgba(90,42,20,0.2);
+    margin:0 clamp(20px,6vw,60px);
+  }
+
+  .report-text{
+    font-size:clamp(22px,3.6vw,30px);
+    line-height:1.5;
+    color:#ffffff;
+    max-width:560px;
+    margin:0;
+    background:#ab0a14;
+    border:2px solid var(--ink);
+    border-radius:12px;
+    padding:0.6em 0.9em;
+    
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:16px;
+  }
+
+  .report-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-height:54px;
+    padding:0.75em 2em;
+    font-family:'IM Fell English', serif;
+    font-weight:bold;
+    font-size:clamp(19px,2.8vw,25px);
+    letter-spacing:0.03em;
+    color:#ffffff;
+    background:#5a2a14;
+    border:1px solid var(--ink);
+    border-radius:8px;
+    text-decoration:none;
+    cursor:pointer;
+    box-shadow:0 3px 10px rgba(0,0,0,0.3);
+    transition:background 0.2s ease, transform 0.15s ease;
+    white-space:nowrap;
+    -webkit-tap-highlight-color:transparent;
+    touch-action:manipulation;
+  }
+  .report-btn:hover{
+    background:#7a3a1c;
+  }
+  .report-btn:active{
+    transform:scale(0.97);
+    background:#7a3a1c;
+  }
 </style>
 </head>
 <body>
@@ -252,8 +310,8 @@
 <div class="parchment-bg"></div>
 
 <div class="hero">
-  <h1 class="hero-title">Stretch out your arms like an octopus 🐙!</h1>
-  <p class="hero-instructions">How many arms can your team make together?</p>
+  <h1 class="hero-title">Pose with the whale drain + look for the big BEAUFORT letters 🐋!</h1>
+  <p class="hero-instructions">Show off your biggest whale smiles!</p>
 </div>
 
 <div class="content-wrap">
@@ -261,75 +319,4 @@
   <div class="photo-col">
     <label class="photo-box" id="photoBox">
       <input type="file" accept="image/*" capture="environment" id="photoInput">
-      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" color="#5a2a14">
-        <path d="M4 7h3l1.5-2h7L17 7h3a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1z"/>
-        <circle cx="12" cy="13" r="3.5"/>
-      </svg>
-      <span class="label" id="photoLabel">Tap here to snap your crew's octopus arms 🐙</span>
-      <img class="preview" id="photoPreview" alt="" hidden>
-      <span class="retake-hint">Tap to retake</span>
-    </label>
-    <button type="button" class="save-btn" id="saveBtn" hidden>Save to my phone 📲</button>
-    <p class="save-hint" id="saveHint" hidden></p>
-  </div>
-
-  <a href="treasure.html" class="next-btn" id="nextBtn">Claim Yer Treasure! 🏆</a>
-
-</div>
-
-<script>
-(function(){
-  var box = document.getElementById('photoBox');
-  var input = document.getElementById('photoInput');
-  var preview = document.getElementById('photoPreview');
-  var label = document.getElementById('photoLabel');
-  var saveBtn = document.getElementById('saveBtn');
-  var saveHint = document.getElementById('saveHint');
-  var currentFile = null;
-
-  saveBtn.addEventListener('click', function(){
-    if(!currentFile) return;
-
-    // Native share sheet lets the user pick "Save Image" themselves —
-    // this is the only way a webpage is allowed to hand a photo to the
-    // OS photo library (browsers don't allow silent writes to it).
-    if(navigator.canShare && navigator.canShare({ files: [currentFile] })){
-      navigator.share({ files: [currentFile], title: 'Octopus drain crew photo' }).catch(function(){
-        /* user cancelled the share sheet — nothing to do */
-      });
-    } else {
-      // Fallback for browsers without file sharing support: trigger a
-      // normal download, and tell folks how to save it on iOS Safari
-      var url = URL.createObjectURL(currentFile);
-      var a = document.createElement('a');
-      a.href = url;
-      a.download = currentFile.name || 'octopus-drain-photo.jpg';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      setTimeout(function(){ URL.revokeObjectURL(url); }, 2000);
-      saveHint.hidden = false;
-      saveHint.textContent = 'Downloaded! On iPhone: press and hold the photo above, then tap "Add to Photos".';
-    }
-  });
-
-  input.addEventListener('change', function(){
-    var file = input.files && input.files[0];
-    if(!file) return;
-    currentFile = file;
-
-    var reader = new FileReader();
-    reader.onload = function(e){
-      preview.src = e.target.result;
-      preview.hidden = false;
-      label.hidden = true;
-      box.classList.add('has-photo');
-      saveBtn.hidden = false;
-    };
-    reader.readAsDataURL(file);
-  });
-})();
-</script>
-
-</body>
-</html>
+      <svg class

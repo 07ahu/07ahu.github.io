@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Pose with the Whale Drain</title>
+<title>Pose with the Octopus Drain</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Pirata+One&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
@@ -34,8 +34,7 @@
     position:relative;
   }
 
-  /* parchment texture, recreated with layered gradients + grain
-     instead of a flat exported image */
+  /* parchment texture */
   .parchment-bg{
     position:fixed;
     inset:0;
@@ -116,6 +115,7 @@
     overflow:hidden;
     transition:background 0.2s ease, transform 0.15s ease, border-color 0.2s ease;
     -webkit-tap-highlight-color:transparent;
+    touch-action:manipulation;
   }
   .photo-box:hover{
     background:rgba(255,255,255,0.4);
@@ -202,7 +202,7 @@
     transform:scale(0.97);
   }
 
-  /* finish button, keeping custom look matching your design specifications */
+  /* Custom styled Action Button linking to trivia.html */
   .finish-btn{
     display:inline-flex;
     align-items:center;
@@ -231,19 +231,13 @@
     background:#fffdbd;
   }
 
-  .report-section .finish-btn{
-    margin-top:clamp(8px,1.5vw,14px);
-  }
-
-  /* Stack vertically and center on narrow screens so nothing
-     gets cramped — the side-by-side layout is for wider screens */
   @media (max-width:640px){
     .content-wrap{
       flex-direction:column;
     }
   }
 
-  /* trash report call-to-action, sits below the photo/next-clue row */
+  /* Trash reporting area and final submission block */
   .report-section{
     position:relative;
     z-index:1;
@@ -251,7 +245,7 @@
     flex-direction:column;
     align-items:center;
     text-align:center;
-    gap:clamp(14px,2.5vw,20px);
+    gap:clamp(18px,2.5vw,24px);
     padding:clamp(24px,5vw,40px) clamp(20px,6vw,60px) clamp(50px,8vw,80px);
     border-top:1px solid rgba(90,42,20,0.2);
     margin:0 clamp(20px,6vw,60px);
@@ -267,7 +261,6 @@
     border:2px solid var(--ink);
     border-radius:12px;
     padding:0.6em 0.9em;
-    
     display:flex;
     flex-direction:column;
     align-items:center;
@@ -310,8 +303,8 @@
 <div class="parchment-bg"></div>
 
 <div class="hero">
-  <h1 class="hero-title">Pose with the whale drain + look for the big BEAUFORT letters 🐋!</h1>
-  <p class="hero-instructions">Show off your biggest whale smiles!</p>
+  <h1 class="hero-title">Pose with the Octopus Drain 🐙!</h1>
+  <p class="hero-instructions">Show off your best pirate poses with the eight-legged artwork!</p>
 </div>
 
 <div class="content-wrap">
@@ -319,4 +312,74 @@
   <div class="photo-col">
     <label class="photo-box" id="photoBox">
       <input type="file" accept="image/*" capture="environment" id="photoInput">
-      <svg class
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" color="#5a2a14">
+        <path d="M4 7h3l1.5-2h7L17 7h3a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1z"/>
+        <circle cx="12" cy="13" r="3.5"/>
+      </svg>
+      <span class="label" id="photoLabel">Tap here to snap a photo with the Octopus Drain 🐙</span>
+      <img class="preview" id="photoPreview" alt="" hidden>
+      <span class="retake-hint">Tap to retake</span>
+    </label>
+    <button type="button" class="save-btn" id="saveBtn" hidden>Save to my phone 📲</button>
+    <p class="save-hint" id="saveHint" hidden></p>
+  </div>
+
+</div>
+
+<div class="report-section">
+  <div class="report-text">
+    Did you see any trash at the drain? Please tell us what you found!  
+    <a class="report-btn" href="https://adopt-a-drain-beaufort-dukeuniv.hub.arcgis.com/feedback/surveys/2f53e8cf2dd04a5297cc3be7c548f872" target="_blank" rel="noopener">FILL OUT THIS FORM</a>
+  </div>
+  <a href="trivia.html" class="finish-btn" id="finishBtn">FINISH THE HUNT 🏴‍☠️</a>
+</div>
+
+<script>
+(function(){
+  var box = document.getElementById('photoBox');
+  var input = document.getElementById('photoInput');
+  var preview = document.getElementById('photoPreview');
+  var label = document.getElementById('photoLabel');
+  var saveBtn = document.getElementById('saveBtn');
+  var saveHint = document.getElementById('saveHint');
+  var currentFile = null;
+
+  saveBtn.addEventListener('click', function(){
+    if(!currentFile) return;
+
+    if(navigator.canShare && navigator.canShare({ files: [currentFile] })){
+      navigator.share({ files: [currentFile], title: 'Octopus drain crew photo' }).catch(function(){});
+    } else {
+      var url = URL.createObjectURL(currentFile);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = currentFile.name || 'octopus-drain-photo.jpg';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 2000);
+      saveHint.hidden = false;
+      saveHint.textContent = 'Downloaded! On iPhone: press and hold the photo above, then tap "Add to Photos".';
+    }
+  });
+
+  input.addEventListener('change', function(){
+    var file = input.files && input.files[0];
+    if(!file) return;
+    currentFile = file;
+
+    var reader = new FileReader();
+    reader.onload = function(e){
+      preview.src = e.target.result;
+      preview.hidden = false;
+      label.hidden = true;
+      box.classList.add('has-photo');
+      saveBtn.hidden = false;
+    };
+    reader.readAsDataURL(file);
+  });
+})();
+</script>
+
+</body>
+</html>

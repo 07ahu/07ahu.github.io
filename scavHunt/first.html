@@ -75,7 +75,10 @@
 
   /* ── START SCREEN ── */
   #startContainer{
-    position:relative;
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
     z-index:1;
     display:flex;
     flex-direction:column;
@@ -83,6 +86,8 @@
     justify-content:center;
     gap:clamp(16px,3vw,28px);
     transition:opacity 0.5s ease;
+    width:100%;
+    text-align:center;
   }
 
   #rolled{
@@ -105,6 +110,8 @@
     animation:pulse 1.6s ease-in-out infinite;
     user-select:none;
     letter-spacing:0.5px;
+    text-align:center;
+    width:100%;
   }
 
   /* ── OPEN SCROLL ── */

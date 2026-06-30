@@ -219,9 +219,9 @@
     padding:0.7em 1.7em;
     font-family:'IM Fell English', serif;
     font-size:clamp(17px,2.4vw,21px);
-    color:var(--ink);
-    background:var(--gold-light);
-    border:1px solid var(--ink);
+    color:#5a2a14;
+    background:#00000000;
+    border:5px solid var(--ink);
     border-radius:8px;
     text-decoration:none;
     cursor:pointer;
@@ -232,10 +232,15 @@
     touch-action:manipulation;
   }
   .next-btn:hover{
-    background:var(--gold);
+    background:#d11420;
   }
   .next-btn:active{
     transform:scale(0.97);
+    background:#d11420;
+  }
+
+  .report-section .next-btn{
+    margin-top:clamp(8px,1.5vw,14px);
   }
 
   /* Stack vertically and center on narrow screens so nothing
@@ -266,7 +271,7 @@
     color:#ffffff;
     max-width:560px;
     margin:0;
-    background:#5a2a14;
+    background:#ab0a14;
     border:2px solid var(--ink);
     border-radius:12px;
     padding:0.6em 0.9em;
@@ -283,7 +288,7 @@
     font-size:clamp(19px,2.8vw,25px);
     letter-spacing:0.03em;
     color:#ffffff;
-    background:#AB0B14;
+    background:#5a2a14;
     border:1px solid var(--ink);
     border-radius:8px;
     text-decoration:none;
@@ -330,13 +335,12 @@
     <p class="save-hint" id="saveHint" hidden></p>
   </div>
 
-  <a href="hint2.html" class="next-btn" id="nextBtn">Next Clue ⚓</a>
-
 </div>
 
 <div class="report-section">
   <p class="report-text">Did you see any trash at the drain? Please tell us what you found!</p>
   <a class="report-btn" href="https://adopt-a-drain-beaufort-dukeuniv.hub.arcgis.com/feedback/surveys/2f53e8cf2dd04a5297cc3be7c548f872" target="_blank" rel="noopener">FILL OUT THIS FORM</a>
+  <a href="hint2.html" class="next-btn" id="nextBtn">Next Clue ⚓</a>
 </div>
 
 <script>

@@ -15,7 +15,7 @@
     --ink:#5a2a14;
     --ink-soft:#6e3a1c;
     --gold:#c9972f;
-    --gold-light:#f3da8e;
+    --gold-light:#5a2a14;
   }
 
   *{box-sizing:border-box; margin:0; padding:0;}
@@ -76,6 +76,8 @@
   /* ── START SCREEN ── */
   #startContainer{
     position:absolute;
+    top:50%;
+    left:50%;
     transform:translate(-50%,-50%);
     z-index:1;
     display:flex;
@@ -186,7 +188,7 @@
     font-family:'IM Fell English', serif;
     font-size:clamp(17px,2.4vw,22px);
     letter-spacing:0.02em;
-    color:var(--ink);
+    color:white;
     background:var(--gold-light);
     border:1px solid var(--ink);
     border-radius:6px;
@@ -239,7 +241,7 @@
     <h1 id="title"></h1>
     <p id="message"></p>
     <div id="buttonContainer">
-      <button id="beginBtn" onclick="window.location.href='hint1.html'">
+      <button id="beginBtn" onclick="window.location.href='first.html'">
         Begin the Hunt ⚓
       </button>
     </div>

@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Stormwater Trivia Challenge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pirata+One&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --parchment-1:#e3c896;
+    --parchment-2:#cfa86c;
+    --ink:#5a2a14;
+    --ink-soft:#6e3a1c;
+    --gold:#c9972f;
+    --gold-light:#f3da8e;
+    --error:#ab0a14;
+  }
+
+  *{box-sizing:border-box;}
+
+  html,body{
+    margin:0;
+    padding:0;
+    width:100%;
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+
+  body{
+    font-family:'IM Fell English', serif;
+    color:var(--ink);
+    background:var(--parchment-2);
+    position:relative;
+  }
+
+  /* parchment texture */
+  .parchment-bg{
+    position:fixed;
+    inset:0;
+    z-index:0;
+    background:
+      radial-gradient(ellipse 60% 40% at 12% 8%, rgba(184,137,90,0.55), transparent 60%),
+      radial-gradient(ellipse 50% 35% at 90% 15%, rgba(184,137,90,0.5), transparent 60%),
+      radial-gradient(ellipse 45% 30% at 75% 70%, rgba(184,137,90,0.45), transparent 60%),
+      radial-gradient(ellipse 55% 45% at 8% 85%, rgba(184,137,90,0.4), transparent 60%),
+      radial-gradient(ellipse 70% 50% at 50% 50%, rgba(227,200,150,0.5), transparent 65%),
+      linear-gradient(160deg, var(--parchment-1), var(--parchment-2) 55%, #b8895a);
+  }
+  .parchment-bg::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    opacity:0.35;
+    mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 0.35  0 0 0 0 0.22  0 0 0 0 0.1  0 0 0 0.35 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+
+  .container{
+    position:relative;
+    z-index:1;
+    max-width:680px;
+    margin:0 auto;
+    padding:clamp(24px,5vw,50px) clamp(16px,4vw,32px) clamp(60px,8vw,100px);
+  }
+
+  .header{
+    text-align:center;
+    margin-bottom:clamp(24px,5vw,40px);
+  }
+
+  .title{
+    font-family:'Pirata One', serif;
+    font-weight:400;
+    color:var(--ink);
+    font-size:clamp(32px,6vw,54px);
+    line-height:1.15;
+    margin:0 0 12px 0;
+    text-shadow:0 1px 0 rgba(255,255,255,0.25);
+  }
+
+  .subtitle{
+    font-size:clamp(18px,2.5vw,23px);
+    font-style:italic;
+    line-height:1.4;
+    color:var(--ink-soft);
+    margin:0;
+  }
+
+  .quiz-form{
+    display:flex;
+    flex-direction:column;
+    gap:clamp(20px,4vw,32px);
+  }
+
+  .question-card{
+    background:rgba(255,255,255,0.25);
+    border:2px solid var(--ink);
+    border-radius:12px;
+    padding:clamp(16px,3vw,24px);
+    box-shadow:0 4px 10px rgba(0,0,0,0.08);
+  }
+
+  .question-text{
+    font-size:clamp(18px,2.4vw,22px);
+    font-weight:bold;
+    line-height:1.4;
+    margin:0 0 14px 0;
+    color:var(--ink);
+  }
+
+  .options-list{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+
+  .option-label{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    font-size:clamp(16px,2.2vw,19px);
+    line-height:1.4;
+    color:var(--ink-soft);
+    cursor:pointer;
+    padding:8px 10px;
+    border-radius:6px;
+    transition:background 0.2s ease;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .option-label:hover{
+    background:rgba(255,255,255,0.35);
+  }
+
+  .option-label input[type="radio"]{
+    margin-top:4px;
+    accent-color:var(--ink);
+    transform:scale(1.15);
+    cursor:pointer;
+  }
+
+  .text-textarea{
+    width:100%;
+    height:110px;
+    font-family:'IM Fell English', serif;
+    font-size:18px;
+    padding:12px;
+    border:1px solid var(--ink);
+    border-radius:6px;
+    background:rgba(255,255,255,0.5);
+    color:var(--ink);
+    resize:none;
+    outline:none;
+  }
+  .text-textarea:focus{
+    background:rgba(255,255,255,0.85);
+    border-color:var(--gold);
+  }
+
+  .error-message{
+    color:var(--error);
+    font-style:italic;
+    font-weight:bold;
+    margin-top:8px;
+    font-size:15px;
+    display:none;
+  }
+
+  .action-zone{
+    text-align:center;
+    margin-top:14px;
+  }
+
+  .submit-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-height:54px;
+    padding:0.7em 2em;
+    font-family:'IM Fell English', serif;
+    font-size:clamp(19px,2.6vw,24px);
+    color:var(--ink);
+    background:transparent;
+    border:5px solid var(--ink);
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:bold;
+    box-shadow:0 3px 10px rgba(0,0,0,0.2);
+    transition:background 0.2s ease, transform 0.15s ease;
+    -webkit-tap-highlight-color:transparent;
+    touch-action:manipulation;
+  }
+  .submit-btn:hover{
+    background:#fffdbd;
+  }
+  .submit-btn:active{
+    transform:scale(0.97);
+    background:#fffdbd;
+  }
+</style>
+</head>
+<body>
+
+<div class="parchment-bg"></div>
+
+<div class="container">
+  <div class="header">
+    <h1 class="title">Were you paying attention to the fun facts?</h1>
+    <p class="subtitle">Answer these final questions to claim yer treasure! 👑</p>
+  </div>
+
+  <form class="quiz-form" id="triviaForm" onsubmit="return false;">
+
+    <div class="question-card" data-qtype="mc" data-correct="A">
+      <p class="question-text">1. What is the biggest source of pollution entering storm drains?</p>
+      <div class="options-list">
+        <label class="option-label"><input type="radio" name="q1" value="A"> A) Trash and litter</label>
+        <label class="option-label"><input type="radio" name="q1" value="B"> B) Wastewater from sinks</label>
+        <label class="option-label"><input type="radio" name="q1" value="C"> C) Oil from boats</label>
+        <label class="option-label"><input type="radio" name="q1" value="D"> D) Leaves</label>
+      </div>
+      <div class="error-message">That's not quite right matey, try again!</div>
+    </div>
+
+    <div class="question-card" data-qtype="mc" data-correct="C">
+      <p class="question-text">2. How many gallons of water can one oyster filter in a day?</p>
+      <div class="options-list">
+        <label class="option-label"><input type="radio" name="q2" value="A"> A) A glass of water (1 cup)</label>
+        <label class="option-label"><input type="radio" name="q2" value="B"> B) About 25 gallons</label>
+        <label class="option-label"><input type="radio" name="q2" value="C"> C) About 50 gallons</label>
+        <label class="option-label"><input type="radio" name="q2" value="D"> D) More than 100 gallons</label>
+      </div>
+      <div class="error-message">That's not quite right matey, try again!</div>
+    </div>
+
+    <div class="question-card" data-qtype="mc" data-correct="B">
+      <p class="question-text">3. Which of the following should never go into a storm drain?</p>
+      <div class="options-list">
+        <label class="option-label"><input type="radio" name="q3" value="A"> A) Rainwater</label>
+        <label class="option-label"><input type="radio" name="q3" value="B"> B) Soap from car washing</label>
+        <label class="option-label"><input type="radio" name="q3" value="C"> C) Tap water</label>
+        <label class="option-label"><input type="radio" name="q3" value="D"> D) All of the above</label>
+      </div>
+      <div class="error-message">That's not quite right matey, try again!</div>
+    </div>
+
+    <div class="question-card" data-qtype="mc" data-correct="A">
+      <p class="question-text">4. Fish need clean water to breathe. What pollutant uses up oxygen in water, making it hard for fish to survive?</p>
+      <div class="options-list">
+        <label class="option-label"><input type="radio" name="q4" value="A"> A) Fertilizers</label>
+        <label class="option-label"><input type="radio" name="q4" value="B"> B) Trash</label>
+        <label class="option-label"><input type="radio" name="q4" value="C"> C) Sand</label>
+        <label class="option-label"><input type="radio" name="q4" value="D"> D) Noise</label>
+      </div>
+      <div class="error-message">That's not quite right matey, try again!</div>
+    </div>
+
+    <div class="question-card" data-qtype="opinion">
+      <p class="question-text">5. It is also important to consider that stormwater pollution affects everyone differently. With this in mind, what is your top concern regarding stormwater pollution?</p>
+      <div class="options-list">
+        <label class="option-label"><input type="radio" name="q5" value="a" required> a) Family or friends getting sick</label>
+        <label class="option-label"><input type="radio" name="q5" value="b"> b) Wildlife dying – sea turtles, fish, etc</label>
+        <label class="option-label"><input type="radio" name="q5" value="c"> c) Harmful chemical exposure</label>
+        <label class="option-label"><input type="radio" name="q5" value="d"> d) Other</label>
+      </div>
+      <div class="error-message">Please cast yer selection!</div>
+    </div>
+
+    <div class="question-card" data-qtype="open">
+      <p class="question-text">6. We’d love to hear your thoughts! What do you think communities like Beaufort can do to better protect storm drains and improve water quality?</p>
+      <p style="margin:-8px 0 14px 0; font-style:italic; color:var(--ink-soft); font-size:16px;">Share one idea, big or small, that could make a difference, from public art to cleanup days, drain labeling, or better recycling.</p>
+      <textarea class="text-textarea" id="openEndedText" placeholder="Type yer crew's ideas here..." required></textarea>
+      <div class="error-message">Don't leave the log empty, scratch down an idea!</div>
+    </div>
+
+    <div class="action-zone">
+      <button type="submit" class="submit-btn" id="submitBtn">CLAIM YER TREASURE 👑</button>
+    </div>
+
+  </form>
+</div>
+
+<script>
+document.getElementById('submitBtn').addEventListener('click', function(e) {
+  e.preventDefault();
+  
+  var cards = document.querySelectorAll('.question-card');
+  var allValid = true;
+  var collectedResponse = "";
+
+  cards.forEach(function(card) {
+    var type = card.getAttribute('data-qtype');
+    var errMsg = card.querySelector('.error-message');
+    
+    if (type === 'mc') {
+      var correctAnswer = card.getAttribute('data-correct');
+      var selectedInput = card.querySelector('input[type="radio"]:checked');
+      
+      if (!selectedInput || selectedInput.value !== correctAnswer) {
+        errMsg.style.display = 'block';
+        allValid = false;
+      } else {
+        errMsg.style.display = 'none';
+      }
+    } 
+    else if (type === 'opinion') {
+      var selectedOpinion = card.querySelector('input[type="radio"]:checked');
+      if (!selectedOpinion) {
+        errMsg.style.display = 'block';
+        allValid = false;
+      } else {
+        errMsg.style.display = 'none';
+        collectedResponse += "Top Concern: " + selectedOpinion.value.toUpperCase() + " | ";
+      }
+    } 
+    else if (type === 'open') {
+      var textVal = document.getElementById('openEndedText').value.trim();
+      if (!textVal) {
+        errMsg.style.display = 'block';
+        allValid = false;
+      } else {
+        errMsg.style.display = 'none';
+        collectedResponse += "Community Idea: " + textVal;
+      }
+    }
+  });
+
+  if (allValid) {
+    // Automatically save responses into local storage under the shared key name
+    var timestamp = new Date().toLocaleString();
+    var stored = localStorage.getItem('scavenger_hunt_logs');
+    var logs = stored ? JSON.parse(stored) : [];
+    
+    logs.push({ text: "[Trivia Submission] " + collectedResponse, date: timestamp });
+    localStorage.setItem('scavenger_hunt_logs', JSON.stringify(logs));
+
+    // Forward straight to treasure chest page
+    window.location.href = 'treasure.html';
+  } else {
+    var firstError = document.querySelector('.error-message[style*="display: block"]');
+    if (firstError) {
+      firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+});
+</script>
+
+</body>
+</html>

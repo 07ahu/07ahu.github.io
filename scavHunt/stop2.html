@@ -211,6 +211,7 @@
   }
 
   /* next-clue button, same family as the other pages */
+  /* next-clue button, golden family for stops 2 and 3 */
   .next-btn{
     display:inline-flex;
     align-items:center;
@@ -219,8 +220,8 @@
     padding:0.7em 1.7em;
     font-family:'IM Fell English', serif;
     font-size:clamp(17px,2.4vw,21px);
-    color:var(--ink);
-    background:var(--gold-light);
+    color:#5a2a14;
+    background: #00000000; 
     border:1px solid var(--ink);
     border-radius:8px;
     text-decoration:none;
@@ -232,7 +233,7 @@
     touch-action:manipulation;
   }
   .next-btn:hover{
-    background:var(--gold);
+    background:#fffdbd; /* Changes to deeper gold on hover */
   }
   .next-btn:active{
     transform:scale(0.97);
